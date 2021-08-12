@@ -1,0 +1,179 @@
+---
+title: "UBC Air Quality Monitoring Network"
+authors: Surya Dhulipala, James Hindson and Naomi Zimmerman
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Air pollution is an urgent problem linked to as many as nine million deaths per year worldwide and 14,000 annually in Canada, primarily from related heart and lung diseases. In Vancouver, British Columbia (BC), sources of air pollution include industrial emissions, vehicle emissions and wildfire smoke. 
+The air pollutants of concern include Particulate Matter less than 2.5 µm in size (PM~2.5~), Ozone, Carbon Monoxide (CO), Carbon Dioxide (CO~2~) and Nitrogen Oxides^1. Breathing high concentrations of these pollutants can cause chronic illnesses, headaches, and even lung cancer and heart disease. 
+
+On UBC campus, sources of air pollution include personal vehicles, construction, restaurants, and businesses. In fact, the BC Air Quality Health Index can change from “Low-Risk” to “High-Risk” on campus during air pollution events such as wildfires. 
+
+![Figure 1. Sources of Air Pollution in Canada (https://www.ccme.ca/en/air-quality-report).](Sources_BC.png)
+
+To address this, we have installed a network of 8 low-cost air quality sensors across UBC campus to measure air pollutant concentrations at different locations on campus. We are leveraging UBC’s existing 5G test bed that includes 1. anonymized video cameras (partnership with Numina^2 and Blue City^3) at traffic intersections to track vehicles, buses, pedestrians, and bicyclists; 2. Anonymized mobile data aggregation (partnership with Rogers Communication and Downtown.AI^4) and 3. Survey Information (partnership with Hello Lamp Post^5). 
+
+Our low-cost air quality sensors are called “Remote Air Quality Monitoring Platform” (RAMPs). RAMPs are capable of measuring air pollutants such as PM~2.5~, CO, CO~2~, NO and NO~2~ every 15 seconds. RAMPs are solar-powered, battery-operated and can also measure wind speed and direction (with attachments).
+```{r Scrape_RAMP_data, include=FALSE}
+
+# Package names
+packages <- c("tidyverse", "plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer")
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+
+# Scrape Air Quality Data from internet
+# requires 1 input : 
+# a) sensorID
+
+# Output: Most recent measurement uploaded by sensors to cloud
+# Wont display output in HTML
+
+Scrape_RAMP_Data <- function(sensorID) {
+
+#Loading all the required libraries
+
+# prefix or base URL (which is common for every RAMP Sensor)
+baseURL <- 'http://18.222.146.48/RAMP/v1/raw'
+
+# Suffix URL (which is unique for every RAMP Sensor). 
+suffixURL <- sensorID
+suffixURL <- as.numeric(suffixURL)
+
+#Fetch the URL after combining the base and suffix URL
+url2fetch <- paste(baseURL, suffixURL, sep='/')
+url2fetch <- paste(url2fetch, "data", sep='/')
+
+#Now, read everything that's in this URL. 
+#readLines function is reading the URL so it will contain HTML code 
+#such as </td etc etc 
+ireach_home <- readLines(url2fetch)
+
+# Now we want to extract all the filenames from the URL and get rid of the HTML tags
+#Recognize a Pattern in iReach_home HTML code
+mypattern <- '.txt\">([^<]*)</a>' 
+
+#Identify the Line Number (ID) where all of these patterns exist
+datalines <- grep(mypattern,ireach_home,value=TRUE)
+
+#Get each expression from each line using the line number and store the matches in a data frame
+getexpr = function(s,g)substring(s,g,g+attr(g,'match.length')-1)
+gg = gregexpr(mypattern,datalines)
+matches = mapply(getexpr,datalines,gg)
+
+#Filenames is a vector of x rows and 1 column. 1st row currently reads '2020-03-07-1005.txt' 
+Filenames = gsub(mypattern,'\\1',matches)
+names(Filenames) = NULL
+
+# Now that we have the file names, we can define the Filepath of the file on the web.
+# 1st row currently reads
+#'http://18.222.146.48/RAMP/v1/raw/1005/2020-03-07-1005.txt'
+Filepaths <- paste(url2fetch, Filenames, sep='/')
+
+# Choose only the last row
+Filepaths <- tail(Filepaths, n =1)
+
+#Now let's extract all the data from the filepath
+dat = ldply(Filepaths, read.table, sep = ",", fill = TRUE, header = FALSE)
+
+# Choose only the last row
+dat <- tail(dat, n =1)
+
+# Organize the RAMP data to retain relevant columns, and make
+# sure first column is named 'date'
+dat <- dat %>% select(V2, V4, V6, V8, V10, V12, V14, V16, V18, V20, V22)
+new_names = c("date", "CO_RAMP", "NO_RAMP", "NO2_RAMP", "O3_RAMP",
+              "CO2_RAMP", "T_RAMP", "RH_RAMP", "PM1_RAMP", "PM25_RAMP", "PM10_RAMP")
+names(dat) = new_names
+dat$date <- as.POSIXct(strptime(dat$date, format = "%m/%d/%y %H:%M:%S", tz = "Etc/GMT-8"))
+#Remove NAs
+dat <- dat %>% na.omit()
+
+return(dat)
+
+}
+
+# Naomi's suggestion: make this easier for changing RAMP #s and locations. This can be imported from an external file.
+RAMP_info <- read_csv("RAMP_info.csv")
+
+# Scrape data
+RAMP_IDs <- as.character(RAMP_info %>% pull(RAMP_IDs))
+current_conc <- map_df(RAMP_IDs,Scrape_RAMP_Data)
+current_conc <- current_conc %>% mutate(RAMP_IDs = RAMP_IDs)
+```
+
+The outcomes of this research will help the UBC community learn about their air pollution exposure in real-time. Click on this map below to find out more about your personal air pollution exposure at different locations on campus. The points are col
+
+```{r Pollution_Map, echo=FALSE}
+AQ_df <- join(current_conc,RAMP_info)
+
+AQ_df$severity = cut(AQ_df$PM25_RAMP,
+                             breaks=c(0,10,25,100,1000), right=FALSE,
+                             labels=c("<10","10-25","25-100","100+"))
+
+palette_rev <- rev(brewer.pal(4, "RdYlBu"))
+pal <- colorFactor(
+  palette = palette_rev,
+  domain = AQ_df$severity
+)
+
+test_map <- leaflet() %>%
+  setView(lng=-123.2504, lat= 49.2652, zoom=15) %>%
+  addProviderTiles("Esri.WorldStreetMap")
+
+
+test_map %>%
+  addCircles(
+    data=AQ_df,
+    lng = ~Longitude,
+    lat = ~Latitude,
+    radius = 30,
+    color = 'black',
+    fillColor = ~pal(severity),
+    fillOpacity = 1,
+    weight=1,
+    popup = paste0("<strong>ID: </strong>", AQ_df$RAMP_label, "</br>",
+                   "<strong>Location: </strong>", AQ_df$RAMP_desc, "</br>",
+                   "<strong>PM2.5 (ug/m3): </strong>", AQ_df$PM25_RAMP, "</br>",
+                   "<strong>CO (ppb): </strong>", AQ_df$CO_RAMP, "</br>",
+                   "<strong>NO (ppb): </strong>", AQ_df$NO_RAMP, "</br>",
+                   "<strong>NO2 (ppb): </strong>", AQ_df$NO2_RAMP, "</br>",
+                   "<strong>O3 (ppb): </strong>", AQ_df$O3_RAMP, "</br>",
+                   "<strong>CO2 (ppm): </strong>", AQ_df$CO2_RAMP, "</br>",
+                   "<strong>Temperature (C): </strong>", AQ_df$T_RAMP, "</br>",
+                   "<strong>Relative Humidity (%): </strong>", AQ_df$RH_RAMP, "</br>",
+                   "<strong>Date: </strong>", AQ_df$date)
+
+  ) %>%
+  addLegend(
+    position = c("topright"),
+    pal=pal,
+    values=AQ_df$severity,
+    title="<strong>PM2.5 (ug/m3)</strong>")
+```
+
+# Reading the Map
+Click on the individual sensors to read the respective pollutant concentrations across campus. Size of the circle increases as the PM~2.5~ concentration increases. Breathing high concentrations of PM~2.5~ can lead to chronic illnesses including lung cancer and increased risk of heart attacks. 
+
+# Join our efforts </b>
+Please spread the word and ask your friends to answer the survey questions by texting 604-409-4498 to engage in friendly banter while learning about air pollution on UBC campus.
+
+# Meet the Researchers 
+1. Surya Dhulipala
+2. James Hindson
+3. Naomi Zimmerman
+
+# References 
+1.	Environment Canada, 2011, Criteria Air Contaminants and Related Pollutants, www.ec.gc.ca/Air/default.asp?lang=En&n=7C43740B-1 (accessed August 5, 2021).
+2.	https://numina.co/
+3.	https://bluecity.ai/
+4.	https://www.downtown.ai/
+5.	https://hellolamppost.co.uk/
