@@ -1,0 +1,6 @@
+output_dir: "."
+navbar:
+    title: "UBC Air Quality Monitoring Network"
+    left:
+      - text: "Home"
+        href: index.html
