@@ -8,7 +8,7 @@ on:
 jobs:
   render:
     name: Render my document
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -18,10 +18,12 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v1
 
       # Runs a single command using the runners shell
-      - name: Install rmarkdown
-        run: Rscript -e 'install.packages("rmarkdown")'
-      - name: Install dependent packages
-        run: Rscript -e 'install.packages(c("tidyverse", "plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer"))'
+      - name: Install rmarkdown and dependent packages
+        run: |-
+          install.packages("remotes")
+          remotes::install_cran("rmarkdown")
+          remotes::install_cran(c("tidyverse", "plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer"))
+        shell: Rscript {0}
       - name: Render my document to all types
         run: Rscript -e 'rmarkdown::render("index.Rmd", output_format = "html_document")'
       - name: Commit results
