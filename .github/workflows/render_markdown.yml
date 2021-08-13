@@ -2,7 +2,7 @@
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0/45 * * * *'
+    - cron:  '0/5 * * * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -18,12 +18,10 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v1
 
       # Runs a single command using the runners shell
-      - name: Install rmarkdown and dependent packages
-        run: |-
-          install.packages("remotes")
-          remotes::install_cran("rmarkdown")
-          remotes::install_cran(c("plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer","readr","purrr"))
-        shell: Rscript {0}
+      - name: Install rmarkdown
+        run: Rscript -e 'install.packages("rmarkdown")'
+      - name: Install dependent packages
+        run: Rscript -e 'install.packages(c("dplyr","readr","plyr","lubridate","leaflet","RColorBrewer","purrr"))'
       - name: Render my document to all types
         run: Rscript -e 'rmarkdown::render("index.Rmd", output_format = "html_document")'
       - name: Commit results
