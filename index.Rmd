@@ -127,7 +127,7 @@ pal <- colorFactor(
   domain = AQ_df$severity
 )
 
-test_map <- leaflet() %>%
+test_map <- leaflet(width="100%") %>%
   setView(lng=-123.2504, lat= 49.2652, zoom=15) %>%
   addProviderTiles("Esri.WorldStreetMap")
 
