@@ -112,7 +112,7 @@ current_conc <- map_df(RAMP_IDs,Scrape_RAMP_Data)
 current_conc <- current_conc %>% mutate(RAMP_IDs = as.numeric(RAMP_IDs))
 ```
 
-The outcomes of this research will help the UBC community learn about their air pollution exposure in real-time. Click on this map below to find out more about your personal air pollution exposure at different locations on campus. The points are col
+The outcomes of this research will help the UBC community learn about their air pollution exposure in real-time. Click on this map below to find out more about your personal air pollution exposure at different locations on campus. 
 
 ```{r Pollution_Map, echo=FALSE, message=FALSE}
 AQ_df <- inner_join(current_conc,RAMP_info)
