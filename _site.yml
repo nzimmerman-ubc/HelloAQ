@@ -1,6 +1,6 @@
 output_dir: "."
 navbar:
-    title: "UBC Air Quality Monitoring Network"
+    title: ""
     left:
       - text: "Home"
         href: index.html
