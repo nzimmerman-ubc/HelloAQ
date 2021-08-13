@@ -21,7 +21,7 @@ Our low-cost air quality sensors are called “Remote Air Quality Monitoring Pla
 ```{r Scrape_RAMP_data, include=FALSE}
 
 # Package names
-packages <- c("tidyverse", "plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer")
+packages <- c("plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer","readr","purrr")
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
