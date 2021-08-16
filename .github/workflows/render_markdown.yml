@@ -22,7 +22,7 @@ jobs:
         run: Rscript --vanilla install.R
 
       - name: Render my document to all types
-        run: Rscript --vanilla 'rmarkdown::render("index.Rmd", output_format = "html_document")'
+        run: Rscript -e 'rmarkdown::render("index.Rmd", output_format = "html_document")'
         
       - name: Commit results
         run: |
