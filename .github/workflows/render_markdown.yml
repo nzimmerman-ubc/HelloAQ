@@ -18,16 +18,15 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v1
       - uses: actions/cache@v2
         with:
-          path: ~\AppData\Local\renv
+          path: ~/.local/share/renv
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
 
       - name: Restore packages
-        shell: Rscript {0}
         run: |
-          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
-          renv::restore()
+          R -e if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          R -e renv::restore()
 
       - name: Render my document to all types
         run: Rscript -e 'rmarkdown::render("index.Rmd", output_format = "html_document")'
