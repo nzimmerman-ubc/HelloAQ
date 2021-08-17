@@ -19,9 +19,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ~/.local/share/renv
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          key: ${{ runner.os }}-renv-v2-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
-            ${{ runner.os }}-renv-
+            ${{ runner.os }}-renv-v2-
 
       - name: Restore packages
         run: |
