@@ -20,17 +20,31 @@ To address this, we have installed a network of 8 low-cost air quality sensors a
 Our low-cost air quality sensors are called “Remote Air Quality Monitoring Platform” (RAMPs). RAMPs are capable of measuring air pollutants such as PM~2.5~, CO, CO~2~, NO and NO~2~ every 15 seconds. RAMPs are solar-powered, battery-operated and can also measure wind speed and direction (with attachments).
 ```{r Scrape_RAMP_data, include=FALSE}
 
-# Package names
-packages <- c("plyr", "dplyr", "lubridate", "leaflet", "RColorBrewer","readr","purrr")
+# Install packages not yet installed and load packages
 
-# Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
+install.packages("rmarkdown")
+library(rmarkdown)
 
-# Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+install.packages("plyr")
+library(plyr)
+
+install.packages("dplyr")
+library(dplyr)
+
+install.packages("lubridate")
+library(lubridate)
+
+install.packages("leaflet")
+library(leaflet)
+
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+install.packages("readr")
+library(readr)
+
+install.packages("purrr")
+library(purrr)
 
 # Scrape Air Quality Data from internet
 # requires 1 input : 
