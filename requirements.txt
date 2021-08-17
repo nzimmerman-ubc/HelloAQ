@@ -1,8 +1,0 @@
-rmarkdown
-dplyr
-readr
-plyr
-lubridate
-leaflet
-RColorBrewer
-purrr
