@@ -135,7 +135,7 @@ AQ_df$severity = cut(AQ_df$PM25_RAMP,
                              breaks=c(0,5,10,25,100,1000), right=FALSE,
                              labels=c("<5","5-10","10-25","25-100","100+"))
 
-palette_rev <- rev(brewer.pal(5, "RdYlBl"))
+palette_rev <- rev(brewer.pal(5, "RdYlGn"))
 pal <- colorFactor(
   palette = palette_rev,
   domain = AQ_df$severity
