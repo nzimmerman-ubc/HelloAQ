@@ -22,6 +22,15 @@ Our low-cost air quality sensors are called “Remote Air Quality Monitoring Pla
 
 # Install packages not yet installed and load packages
 
+install.packages("caret")
+library(caret)
+
+install.packages("randomForest")
+library(randomForest)
+
+install.packages("gtools")
+library(gtools)
+
 install.packages("rmarkdown")
 library(rmarkdown)
 
@@ -45,6 +54,7 @@ library(readr)
 
 install.packages("purrr")
 library(purrr)
+
 
 # Scrape Air Quality Data from internet
 # requires 1 input : 
@@ -107,7 +117,7 @@ dat <- tail(dat, n =1)
 # sure first column is named 'date'
 dat <- dat %>% select(V2, V4, V6, V8, V10, V12, V14, V16, V18, V20, V22)
 new_names = c("date", "CO_RAMP", "NO_RAMP", "NO2_RAMP", "O3_RAMP",
-              "CO2_RAMP", "T_RAMP", "RH_RAMP", "PM1_RAMP", "PM25_RAMP", "PM10_RAMP")
+              "CO2_RAMP", "T_RAMP", "RH_RAMP", "PM1_RAMP", "PM_RAMP", "PM10_RAMP")
 names(dat) = new_names
 dat$date <- as.POSIXct(strptime(dat$date, format = "%m/%d/%y %H:%M:%S", tz = "Etc/GMT-8"))
 #Remove NAs
@@ -124,18 +134,45 @@ RAMP_info <- read_csv("RAMP_info.csv")
 RAMP_IDs <- as.character(RAMP_info %>% pull(RAMP_IDs))
 current_conc <- map_df(RAMP_IDs,Scrape_RAMP_Data)
 current_conc <- current_conc %>% mutate(RAMP_IDs = as.numeric(RAMP_IDs))
+current_conc <- current_conc %>% mutate(DP_RAMP = 243.12*(log(RH_RAMP/100)+(17.62*T_RAMP)/(243.12+T_RAMP))/(17.62-(log(RH_RAMP/100)+(17.62*T_RAMP)/(243.12+T_RAMP))))
+current_conc_PM <- current_conc %>%
+  select(PM_RAMP,T_RAMP,RH_RAMP,DP_RAMP)
+current_conc_matrix <- data.matrix(current_conc)
+current_conc_PM <- data.matrix(current_conc_PM)
+
+base::load(file="./Calibration_Models/CO_model.Rda")
+base::load(file="./Calibration_Models/NO_model.Rda")
+base::load(file="./Calibration_Models/NO2_model.Rda")
+base::load(file="./Calibration_Models/O3_model.Rda")
+base::load(file="./Calibration_Models/CO2_model.Rda")
+base::load(file="./Calibration_Models/PM_model.Rda")
+
+source(file="./Calibration_Models/CAPS_PR_Apply.R")
+source(file="./Calibration_Models/CAPS_RF_Apply.R")
+source(file="./Calibration_Models/CAPS_Hybrid_Apply.R")
+
+CO_fit <- round(as.vector(CAPS_Hybrid_Apply(CO_model,current_conc_matrix)),0)
+NO_fit <- round(as.vector(CAPS_Hybrid_Apply(NO_model,current_conc_matrix)),0)
+NO2_fit <- round(as.vector(CAPS_Hybrid_Apply(NO2_model,current_conc_matrix)),0)
+O3_fit <- round(as.vector(CAPS_Hybrid_Apply(O3_model,current_conc_matrix)),0)
+CO2_fit <- round(as.vector(CAPS_Hybrid_Apply(CO2_model,current_conc_matrix)),0)
+PM_fit <- round(as.vector(CAPS_PR_Apply(PM_model,current_conc_PM)),1)
+
+current_conc_fit <- data.frame(CO_fit,NO_fit,NO2_fit,O3_fit,CO2_fit,PM_fit)
+current_conc_fit <- current_conc_fit %>% mutate(RAMP_IDs = as.numeric(RAMP_IDs))
+current_conc_all <- inner_join(current_conc,current_conc_fit,by="RAMP_IDs")
 ```
 
 The outcomes of this research will help the UBC community learn about their air pollution exposure in real-time. Click on this map below to find out more about your personal air pollution exposure at different locations on campus. 
 
 ```{r Pollution_Map, echo=FALSE, message=FALSE}
-AQ_df <- inner_join(current_conc,RAMP_info)
+AQ_df <- inner_join(current_conc_all,RAMP_info)
 
-AQ_df$severity = cut(AQ_df$PM25_RAMP,
+AQ_df$severity = cut(AQ_df$PM_fit,
                              breaks=c(0,5,10,25,100,1000), right=FALSE,
                              labels=c("<5","5-10","10-25","25-100","100+"))
 
-palette_rev <- rev(brewer.pal(5, "RdYlBl"))
+palette_rev <- rev(brewer.pal(5, "RdYlGn"))
 pal <- colorFactor(
   palette = palette_rev,
   domain = AQ_df$severity
@@ -158,12 +195,12 @@ test_map %>%
     weight=1,
     popup = paste0("<strong>ID: </strong>", AQ_df$RAMP_label, "</br>",
                    "<strong>Location: </strong>", AQ_df$RAMP_desc, "</br>",
-                   "<strong>PM2.5 (ug/m3): </strong>", AQ_df$PM25_RAMP, "</br>",
-                   "<strong>CO (ppb): </strong>", AQ_df$CO_RAMP, "</br>",
-                   "<strong>NO (ppb): </strong>", AQ_df$NO_RAMP, "</br>",
-                   "<strong>NO2 (ppb): </strong>", AQ_df$NO2_RAMP, "</br>",
-                   "<strong>O3 (ppb): </strong>", AQ_df$O3_RAMP, "</br>",
-                   "<strong>CO2 (ppm): </strong>", AQ_df$CO2_RAMP, "</br>",
+                   "<strong>PM2.5 (ug/m3): </strong>", AQ_df$PM_fit, "</br>",
+                   "<strong>CO (ppb): </strong>", AQ_df$CO_fit, "</br>",
+                   "<strong>NO (ppb): </strong>", AQ_df$NO_fit, "</br>",
+                   "<strong>NO2 (ppb): </strong>", AQ_df$NO2_fit, "</br>",
+                   "<strong>O3 (ppb): </strong>", AQ_df$O3_fit, "</br>",
+                   "<strong>CO2 (ppm): </strong>", AQ_df$CO2_fit, "</br>",
                    "<strong>Temperature (C): </strong>", AQ_df$T_RAMP, "</br>",
                    "<strong>Relative Humidity (%): </strong>", AQ_df$RH_RAMP, "</br>",
                    "<strong>Date: </strong>", AQ_df$date)
