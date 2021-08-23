@@ -8,7 +8,7 @@ output:
     toc_float: false
     theme: readable
 ---
-Air pollution is an urgent problem linked to as many as nine million deaths per year worldwide and 14,000 annually in Canada, primarily from related heart and lung diseases. In Vancouver, British Columbia (BC), sources of air pollution include industrial emissions, vehicle emissions and wildfire smoke. 
+Pollution is an urgent problem linked to as many as nine million deaths per year worldwide and 14,000 annually in Canada, primarily from related heart and lung diseases. In Vancouver, British Columbia (BC), sources of air pollution include industrial emissions, vehicle emissions and wildfire smoke. 
 The air pollutants of concern include Particulate Matter less than 2.5 µm in size (PM~2.5~), Ozone, Carbon Monoxide (CO), Carbon Dioxide (CO~2~) and Nitrogen Oxides^1^. Breathing high concentrations of these pollutants can cause chronic illnesses, headaches, and even lung cancer and heart disease. 
 
 On UBC campus, sources of air pollution include personal vehicles, construction, restaurants, and businesses. In fact, the BC Air Quality Health Index can change from “Low-Risk” to “High-Risk” on campus during air pollution events such as wildfires. 
