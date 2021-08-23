@@ -11,19 +11,19 @@ output:
 Air Pollution is an urgent problem linked to as many as nine million deaths per year worldwide and 14,000 annually in Canada, primarily from related heart and lung diseases. In Vancouver, British Columbia (BC), sources of air pollution include industrial emissions, vehicle emissions and wildfire smoke. 
 The air pollutants of concern include Particulate Matter less than 2.5 µm in size (PM~2.5~), Ozone, Carbon Monoxide (CO), Carbon Dioxide (CO~2~) and Nitrogen Oxides^1^. Breathing high concentrations of these pollutants can cause chronic illnesses, headaches, and even lung cancer and heart disease. 
 
-# Watch a video to learn more
-
-![UBC Air Quality Monitoring Network](video.mp4)
-
-On UBC campus, sources of air pollution include personal vehicles, construction, restaurants, and businesses. In fact, the BC Air Quality Health Index can change from “Low-Risk” to “High-Risk” on campus during air pollution events such as wildfires. 
+On UBC campus, sources of air pollution include personal vehicles, construction, restaurants, and businesses. In fact, the BC Air Quality Health Index can change from “Low-Risk” to “High-Risk” on campus during air pollution events such as wildfires.
 
 To address this, we have installed a network of 8 low-cost air quality sensors across UBC campus to measure air pollutant concentrations at different locations on campus. We are leveraging UBC’s existing 5G test bed that includes 1. anonymized video cameras (partnership with Numina^2^ and Blue City^3^) at traffic intersections to track vehicles, buses, pedestrians, and bicyclists; 2. Anonymized mobile data aggregation (partnership with Rogers Communication and Downtown.AI^4^) and 3. Survey Information (partnership with Hello Lamp Post^5^). 
 
 Our low-cost air quality sensors are called “Remote Air Quality Monitoring Platform” (RAMPs). RAMPs are capable of measuring air pollutants such as PM~2.5~, CO, CO~2~, NO and NO~2~ every 15 seconds. RAMPs are solar-powered, battery-operated and can also measure wind speed and direction (with attachments).
 
-# Reading the Map
+# Watch a video to learn more about our air pollution monitoring network on UBC campus
 
-Click on this map below to find out more about your personal air pollution exposure at different locations on campus. Click on the individual sensors to read the respective pollutant concentrations across campus. The colour of the circle changes as the PM~2.5~ concentration increases. Breathing high concentrations of PM~2.5~ can lead to chronic illnesses including lung cancer and increased risk of heart attacks. According to 
+![UBC Air Quality Monitoring Network](video.mp4)
+
+# Real-time air quality on UBC campus
+
+Click on this map below to find out more about your personal air pollution exposure at different locations on campus. Click on the individual sensors to read the respective pollutant concentrations across campus. The colour of the circle changes as the PM~2.5~ concentration increases. Breathing high concentrations of PM~2.5~ can lead to chronic illnesses including lung cancer and increased risk of heart attacks.
 
 
 ```{r Scrape_RAMP_data, include=FALSE}
@@ -225,6 +225,8 @@ test_map %>%
     values=AQ_df$severity,
     title="<strong>PM2.5 (ug/m3)</strong>")
 ```
+# Making sense of PM~2.5~ data
+Metro Vancouver set a maximum allowable exposure level of 25 ug/m3 over a 24-hour period as part of its Air Quality Objectives (as of January 2020).
 
 # Join our efforts
 Please spread the word and ask your friends to answer the survey questions by texting 604-409-4498 to engage in friendly banter while learning about air pollution on UBC campus.
