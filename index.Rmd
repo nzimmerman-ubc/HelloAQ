@@ -110,8 +110,9 @@ Filepaths <- tail(Filepaths, n =1)
 #Now let's extract all the data from the filepath
 dat = ldply(Filepaths, read.table, sep = ",", fill = TRUE, header = FALSE)
 
-# Choose only the last row
-dat <- tail(dat, n =1)
+# Choose the last 15 minutes (n=60, 4 measurements per minute)
+dat <- tail(dat, n =60)
+
 
 # Organize the RAMP data to retain relevant columns, and make
 # sure first column is named 'date'
@@ -122,6 +123,9 @@ names(dat) = new_names
 dat$date <- as.POSIXct(strptime(dat$date, format = "%m/%d/%y %H:%M:%S", tz = "Etc/GMT-8"))
 #Remove NAs
 dat <- dat %>% na.omit()
+
+# Average the reading out
+dat <- dat %>% summarise_all(mean)
 
 return(dat)
 
@@ -161,6 +165,7 @@ PM_fit <- round(as.vector(CAPS_PR_Apply(PM_model,current_conc_PM)),1)
 current_conc_fit <- data.frame(CO_fit,NO_fit,NO2_fit,O3_fit,CO2_fit,PM_fit)
 current_conc_fit <- current_conc_fit %>% mutate(RAMP_IDs = as.numeric(RAMP_IDs))
 current_conc_all <- inner_join(current_conc,current_conc_fit,by="RAMP_IDs")
+current_conc_all <- current_conc_all %>% mutate_at(7:8, round, 1)
 ```
 
 The outcomes of this research will help the UBC community learn about their air pollution exposure in real-time. Click on this map below to find out more about your personal air pollution exposure at different locations on campus. 
