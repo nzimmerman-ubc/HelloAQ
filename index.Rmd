@@ -19,7 +19,7 @@ Our low-cost air quality sensors are called “Remote Air Quality Monitoring Pla
 
 # Watch a video to learn more about our air pollution monitoring network on UBC campus
 
-![UBC Air Quality Monitoring Network](video.mp4)
+(video.mp4)
 
 # Real-time air quality on UBC campus
 
