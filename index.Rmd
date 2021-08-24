@@ -225,7 +225,7 @@ test_map %>%
     title="<strong>PM2.5 (ug/m3)</strong>")
 ```
 # Making sense of air quality data
-Metro Vancouver set a maximum allowable exposure level of 25 ug/m3 over a 24-hour period as part of its Air Quality Objectives (as of January 2020). Other air quality objectives are provided in the table below.
+Metro Vancouver set a maximum allowable exposure level of 25 ug m^-3^ over a 24-hour period as part of its Air Quality Objectives (as of January 2020). Other air quality objectives are provided in the table below.
 
 ![](Metro_Van_Air_Q_objectives.jpg)
 
