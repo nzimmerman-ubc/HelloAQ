@@ -19,7 +19,7 @@ Our low-cost air quality sensors are called “Remote Air Quality Monitoring Pla
 
 # Watch a video to learn more about our air pollution monitoring network on UBC campus
 
-![](https://vimeo.com/591302352){width="560" height="315"}
+(https://vimeo.com/591302352){width="560" height="315"}
 
 # Real-time air quality on UBC campus
 
@@ -226,9 +226,9 @@ test_map %>%
     title="<strong>PM2.5 (ug/m3)</strong>")
 ```
 # Making sense of air quality data
-Metro Vancouver set a maximum allowable exposure level of 25 ug/m3 over a 24-hour period as part of its Air Quality Objectives (as of January 2020). Other air quality objectives are provided in Table 1. 
+Metro Vancouver set a maximum allowable exposure level of 25 ug/m3 over a 24-hour period as part of its Air Quality Objectives (as of January 2020). Other air quality objectives are provided in the table below.
 
-![Table 1. Air Quality Objectives set by Meto Vancouver (as of January 2020)](Metro_Van_Air_Q_objectives.jpg)
+(Metro_Van_Air_Q_objectives.jpg)
 
 # Join our efforts
 Please spread the word and ask your friends to answer the survey questions by texting 604-409-4498 to engage in friendly banter while learning about air pollution on UBC campus.
