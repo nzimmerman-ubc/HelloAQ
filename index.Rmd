@@ -18,7 +18,7 @@ To address this, we have installed a network of 8 low-cost air quality sensors a
 Our low-cost air quality sensors are called “Remote Air Quality Monitoring Platform” (RAMPs). RAMPs are capable of measuring air pollutants such as PM~2.5~, CO, CO~2~, NO and NO~2~ every 15 seconds. RAMPs are solar-powered, battery-operated and can also measure wind speed and direction (with attachments).
 
 # Watch a video to learn more about our air pollution monitoring network on UBC campus
-![](https://vimeo.com/591302352){width="640" height="1138"}
+![](https://vimeo.com/591302352){width=90% height=50%}
 
 # Real-time air quality on UBC campus
 
