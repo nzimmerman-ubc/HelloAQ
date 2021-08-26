@@ -238,6 +238,9 @@ Please spread the word and ask your friends to answer the survey questions by te
 2. James Hindson
 3. Naomi Zimmerman
 
+# Acknowledgements
+This research was undertaken, in part, thanks to funding from the Canada Research Chairs Program, MITACS Accelerate program and Rogers Communications.
+
 # References 
 1.	Environment Canada, 2011, Criteria Air Contaminants and Related Pollutants, https://www.ec.gc.ca/Air/default.asp?lang=En&n=7C43740B-1 (accessed August 5, 2021).
 2.	https://numina.co/
