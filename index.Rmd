@@ -57,7 +57,7 @@ library(leaflet)
 install.packages("RColorBrewer")
 library(RColorBrewer)
 
-install.packages("readr")
+#install.packages("readr")
 library(readr)
 
 install.packages("purrr")
@@ -149,7 +149,8 @@ current_conc <- current_conc %>% mutate(RAMP_IDs = as.numeric(RAMP_IDs))
 current_conc <- current_conc %>% mutate(DP_RAMP = 243.12*(log(RH_RAMP/100)+(17.62*T_RAMP)/(243.12+T_RAMP))/(17.62-(log(RH_RAMP/100)+(17.62*T_RAMP)/(243.12+T_RAMP))))
 current_conc_PM <- current_conc %>%
   select(PM_RAMP,T_RAMP,RH_RAMP,DP_RAMP)
-current_conc_matrix <- data.matrix(current_conc)
+current_conc_gas <- select(current_conc,CO_RAMP,NO_RAMP,NO2_RAMP,O3_RAMP,CO2_RAMP,T_RAMP,RH_RAMP)
+current_conc_matrix <- data.matrix(current_conc_gas)
 current_conc_PM <- data.matrix(current_conc_PM)
 
 base::load(file="./Calibration_Models/CO_model.Rda")
