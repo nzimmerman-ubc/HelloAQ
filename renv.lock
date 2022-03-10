@@ -950,6 +950,16 @@
         "stringr"
       ]
     },
+    "rgdal": {
+      "Package": "rgdal",
+      "Version": "1.5-28",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0f625c5c628af2955aef2c561413ee30",
+      "Requirements": [
+        "sp"
+      ]
+    },
     "rlang": {
       "Package": "rlang",
       "Version": "1.0.1",

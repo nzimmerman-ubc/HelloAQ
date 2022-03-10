@@ -57,12 +57,14 @@ library(leaflet)
 install.packages("RColorBrewer")
 library(RColorBrewer)
 
-#install.packages("readr")
+install.packages("readr")
 library(readr)
 
 install.packages("purrr")
 library(purrr)
 
+install.packages("rgdal")
+library(rgdal)
 
 # Scrape Air Quality Data from internet
 # requires 1 input : 
