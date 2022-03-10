@@ -66,6 +66,9 @@ library(purrr)
 install.packages("rgdal")
 library(rgdal)
 
+remove.packages("terra") 
+remove.packages("raster")
+
 # Scrape Air Quality Data from internet
 # requires 1 input : 
 # a) sensorID
