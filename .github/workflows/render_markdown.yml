@@ -8,7 +8,7 @@ on:
 jobs:
   render:
     name: Render my document
-    runs-on: ubuntu-18.04
+    runs-on: macOS-latest
     env:
       RENV_PATHS_ROOT: ~/.local/share/renv
 
