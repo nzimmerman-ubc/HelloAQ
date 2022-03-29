@@ -47,11 +47,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
 
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v1
-        with:
-          status: ${{ job.status }}
-          notify_when: 'failure'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+      #- name: Report Status
+        #if: always()
+        #uses: ravsamhq/notify-slack-action@v1
+        #with:
+          #status: ${{ job.status }}
+          #notify_when: 'failure'
+        #env:
+          #SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
