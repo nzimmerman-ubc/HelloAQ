@@ -2,13 +2,13 @@
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 9 * * *'
+    - cron:  '0/5 * * * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   render:
     name: Render my document
-    runs-on: macOS-latest
+    runs-on: ubuntu-18.04
     env:
       RENV_PATHS_ROOT: ~/.local/share/renv
 
